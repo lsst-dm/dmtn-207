@@ -108,6 +108,14 @@ A notional EPO service would have to perform the following tasks
 
    butler retrieve-artifacts REPO TARGET_BUCKET --collections=u/alien/zooniverse-1
 
+* Create any manifests. metadata etc required by zooniverse
+
+* Apply any data rights controls or quaratine outgoing data for approval
+
+* Maintain an index of PI projects and their run collections that it can use to batch retrieve or
+poll user collections for data
+
+
 Image conversion
 ----------------
 
@@ -135,11 +143,30 @@ location from where it can be retrieved without authentication.
 (such as a PNG formatter) required to meet the DM-EPO interface
 specifications.
 
+* If there was a python package or other client that would allow the PI
+to manage apsects of their zooniverse project(s) - eg project creation,
+deletion, it can be installed at the RSP so that it is available from
+the notebook aspect enviroment.
+
 Notes
 =====
 
 * I think we'd all feel better if zooniverse could access an
 authenticated web server
+
+* There is lack of clarity on whether u/user/ collections are permanent,
+atatched to DR-specific registries, or unguaranteed
+
+* A tutorial notebook or helper class could be made available to walk
+PIs through the process. The notebook could be added to the mobu harness
+to alert to any interface drifts.
+
+* When RSP's semaphore service is extended to deal with per-user
+notification, we could provide an API that allows EPO to send per-user
+notifications informing them of relevant status, such as that their
+files have been retrieved and can be safely removed.
+
+
 .. .. rubric:: References
 
 .. Make in-text citations with: :cite:`bibkey`.
