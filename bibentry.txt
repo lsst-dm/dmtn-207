@@ -1,0 +1,9 @@
+% bibentry template for lsst.bib in https://github.com/lsst/lsst-texmf/blob/master/texmf/bibtex/bib/lsst.bib
+
+@DocuShare{DMTN-207,
+   author = { Frossie Economou },
+    title = {Architecture for the DM-to-EPO data export for Citizen Science projects},
+     year = 2021,
+    month = Sep,
+   handle = {DMTN-207},
+      url = {https://dmtn-207.lsst.io } }
