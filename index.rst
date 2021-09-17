@@ -105,6 +105,7 @@ A notional EPO service would have to perform the following tasks
 * Retrieve the user's files from the Butler, eg.
 
 .. code-block:: bash
+
    butler retrieve-artifacts REPO TARGET_BUCKET --collections=u/alien/zooniverse-1
 
 Image conversion
