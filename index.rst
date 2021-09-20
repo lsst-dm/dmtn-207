@@ -81,21 +81,16 @@ Architecture
 User workflow
 -------------
 
-The RSP user henceforth referred to as the (Zooniverse) PI is
-manipulating data either interactively or though some kind of user batch
-process to create a Butler run collection that contains the files they
-wish to make available to their Zooniverse project:
+The RSP user henceforth referred to as the (Zooniverse) PI is manipulating data either interactively or though some kind of user batch process to create a Butler run collection that contains the files they wish to make available to their Zooniverse project:
 
 .. code-block:: python
 
    butler = Butler(REPO, run="u/alien/zooniverse-1")
    butler.put(myimage, "zooniverse_cutout", dataId=mydataId)
 
-Note that in the case that the user is using a batch processing pipeline
-for this, the butler put could be done for them.
+Note that in the case that the user is using a batch processing pipeline for this, the butler put could be done for them.
 
-In the final system, the user will have to grant permission to an EPO
-service account to retrieve data from their collection.
+In the final system, the user will have to grant permission to an EPO service account to retrieve data from their collection.
 
 EPO service workflow
 --------------------
@@ -110,61 +105,39 @@ A notional EPO service would have to perform the following tasks
 
 * Create any manifests. metadata etc required by zooniverse
 
-* Apply any data rights controls or quaratine outgoing data for approval
+* Apply any data rights controls or quarantine outgoing data for approval
 
-* Maintain an index of PI projects and their run collections that it can use to batch retrieve or
-poll user collections for data
+* Maintain an index of PI projects and their run collections that it can use to batch retrieve or poll user collections for data
 
 
 Image conversion
 ----------------
 
-On the assumption that Zooniverse wants png or jpeg or some other kind
-of non-native representation of the pixel, a Butler dataset type can be
-defined with the appropriate formatter. The butler ``Formatter`` would have to
-be written to convert the Python object to the appropriate on-disk
-format (e.g. PNG).
+On the assumption that Zooniverse wants png or jpeg or some other kind of non-native representation of the pixel, a Butler dataset type can be defined with the appropriate formatter. The butler ``Formatter`` would have to be written to convert the Python object to the appropriate on-disk format (e.g. PNG).
 
 Separation of Concerns
 ======================
 
-* The RSP system ensures the PI is authenticated and is able to query
-and retrieve their data of interest, manipulate it (if desired) and store it into the
-RSP/DF butler registry. It is also responsible for supplying the
-auhorisation model that allows the user to permit an EPO service account
-to read their data.
+* The RSP system ensures the PI is authenticated and is able to query and retrieve their data of interest, manipulate it (if desired) and store it into the RSP/DF butler registry. It is also responsible for supplying the authorisation model that allows the user to permit an EPO service account to read their data.
 
-* The EPO system is responsible for the code that retrieves the user's
-data, (optionally but recommended) validate it for exfiltration
-according to applicable policies, and publish it in an http-accessible
-location from where it can be retrieved without authentication.
+* The EPO system is responsible for the code that retrieves the user's data, (optionally but recommended) validate it for exfiltration according to applicable policies, and publish it in an http-accessible location from where it can be retrieved without authentication.
 
-* Science Pipelines is responsible for providing any butler-specific configuration
-(such as a PNG formatter) required to meet the DM-EPO interface
-specifications.
+* Science Pipelines is responsible for providing any butler-specific configuration (such as a PNG formatter) required to meet the DM-EPO interface specifications.
 
-* If there was a python package or other client that would allow the PI
-to manage apsects of their zooniverse project(s) - eg project creation,
-deletion, it can be installed at the RSP so that it is available from
-the notebook aspect enviroment.
+* If there was a python package or other client that would allow the PI to manage aspects of their zooniverse project(s) - eg project creation, deletion, it can be installed at the RSP so that it is available from the notebook aspect environment.
 
 Notes
 =====
 
-* I think we'd all feel better if zooniverse could access an
-authenticated web server
+* I think we'd all feel better if zooniverse could access an authenticated web server
 
-* There is lack of clarity on whether u/user/ collections are permanent,
-atatched to DR-specific registries, or unguaranteed
+* There is lack of clarity on whether u/user/ collections are permanent, attached to DR-specific registries, or unguaranteed
 
-* A tutorial notebook or helper class could be made available to walk
-PIs through the process. The notebook could be added to the mobu harness
-to alert to any interface drifts.
+* A tutorial notebook or helper class could be made available to walk PIs through the process. The notebook could be added to the mobu harness to alert to any interface drifts.
 
-* When RSP's semaphore service is extended to deal with per-user
-notification, we could provide an API that allows EPO to send per-user
-notifications informing them of relevant status, such as that their
-files have been retrieved and can be safely removed.
+* When RSP's semaphore service is extended to deal with per-user notification, we could provide an API that allows EPO to send per-user notifications informing them of relevant status, such as that their files have been retrieved and can be safely removed.
+
+* If there is any specific metadata that zooniverse needs that is dropped by the butler retrieve-artifacts, DM can work with EPO to advice on how to obtain it so it can be included with the manifest.
 
 
 .. .. rubric:: References
