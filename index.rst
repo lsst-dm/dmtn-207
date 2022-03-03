@@ -139,6 +139,55 @@ Notes
 
 * If there is any specific metadata that zooniverse needs that is dropped by the butler retrieve-artifacts, DM can work with EPO to advice on how to obtain it so it can be included with the manifest.
 
+Potential Use Cases
+===================
+
+Catalog of Objects
+------------------
+
+A scientist has a catalog of objects for which they would like to obtain cutouts as multi-band PNGs from deep coadds to send to Zooniverse.
+This catalog may have a non-trivial number of rows.
+It is assumed that the scientist has permission for these cutouts to be sent to Zooniverse.
+
+Possible Workflow
+^^^^^^^^^^^^^^^^^
+
+Assume the number of objects is sufficient that the cutout retrieval must be parallelized and can not be run in a user notebook environment.
+Therefore assume this can run in a user-batch environment using standard Rubin pipeline infrastructure (``PipelineTask``).
+
+1. The catalog is "all sky" and so does not have an obvious Butler "data coordinate".
+   In the future it may be possible to upload it using an opaque dataId but in the nearer term a relatively simple script could be used to shard the catalog (similar to a refcat for example) and upload the shards to the Butler repostory.
+2. Submit a batch job using a pipeline that will take relevant images and the sharded catalogs as input and extract the cutouts.
+3. The cutouts per band/tract/patch would be stored using ``lsst.meas.algorthms.Stamps`` (or derived class).
+
+The above is a fairly general use case that does not involve any specific EPO functionality.
+The butler repository will have a collection of multi-extension FITS files grouped by band, tract and patch (it is possible that the system could decide that patches are not needed and per-tract is enough).
+
+The Zooniverse step would then be to retrieve these multi-extension FITS files for each tract/patch and combine the different bands into images.
+A Python object would need to be defined that represents a collection of RGB images.
+For example, this could be achieved using ``PIL.Image`` objects in a special container class.
+The steps would then be:
+
+1. For each tract/patch read in the ``Stamps`` object for each band.
+2. Construct RGB image data for each cutout and store in the container class.
+3. Store the container object in a Butler collection.
+
+If constructed as a ``PipelineTask`` this step could be executed at scale using BPS and the user would specify how the images are converted to RGB via configuration.
+
+The Butler storage step requires that a special "formatter" class be written that knows how to convert the RGB image container class to a file on disk.
+A default proposal for this would be that the resulant output is a ZIP file containing PNG images.
+
+
+Once these ZIP files have been stored EPO would then retrieve them and unpack them as discussed in an earlier section.
+
+Unanswered questions are:
+
+* The ZIP file would automatically be named after run collection and the tract and patch.
+  The naming of the PNG files within that ZIP archive is at the discretion of the formatter.
+  Is the dataId plus a counter acceptable?
+* How much metadata should be included in the PNG files?
+  With `Pillow <https://pillow.readthedocs.io/en/stable/handbook/tutorial.html>`__ it is possible to store all available FITS metadata in the EXIF segment of the PNG including a WCS (for example using the `AVM standard <https://en.wikipedia.org/wiki/Astronomy_Visualization_Metadata>`__).
+
 
 .. .. rubric:: References
 
